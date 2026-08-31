@@ -20,6 +20,8 @@
       border-radius: 8px;
       padding: 20px;
       margin: 100px auto;
+      position: relative;
+      z-index: 10; /* garante que o botão esteja clicável */
     }
     .login-box {
       width: 100%;
@@ -50,7 +52,7 @@
       border-radius: 5px;
       font-size: 16px;
     }
-    .hidden { display: none; }
+    .hidden { display: none !important; } /* força esconder */
     header {
       background-color: #333333;
       color: #fff;
@@ -103,7 +105,7 @@
       <h1>Faccini Odontologia</h1>
       <input type="text" id="username" placeholder="Digite seu nome">
       <input type="password" id="password" placeholder="Digite sua senha">
-      <button type="button" onclick="login()">Entrar</button>
+      <button id="loginBtn">Entrar</button>
     </div>
   </div>
 
@@ -150,6 +152,9 @@
     const allowedUsers = ["Dr Ed", "Dr Ana", "Gizelle"];
     let currentUser = "";
 
+    // Ativar botão via addEventListener (mais seguro que onclick inline)
+    document.getElementById("loginBtn").addEventListener("click", login);
+
     // Carregar dados salvos
     window.onload = function() {
       loadTable("patientsTable");
@@ -160,8 +165,8 @@
     };
 
     function login() {
-      const user = document.getElementById("username").value;
-      const pass = document.getElementById("password").value;
+      const user = document.getElementById("username").value.trim();
+      const pass = document.getElementById("password").value.trim();
       if (allowedUsers.includes(user) && pass === passwordKey) {
         document.getElementById("loginPage").classList.add("hidden");
         document.getElementById("dashboard").classList.remove("hidden");
@@ -222,15 +227,3 @@
       let data = [];
       for (let i = 1; i < table.rows.length; i++) {
         let row = [];
-        for (let j = 0; j < table.rows[i].cells.length; j++) {
-          row.push(table.rows[i].cells[j].innerText);
-        }
-        data.push(row);
-      }
-      localStorage.setItem(tableId, JSON.stringify(data));
-    }
-
-    function loadTable(tableId) {
-      const table = document.getElementById(tableId);
-      const data = JSON.parse(localStorage.getItem(tableId)) || [];
-      for (let i = 0; i < data.length
