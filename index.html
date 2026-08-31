@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <title>Faccini Odontologia Dashboard</title>
@@ -15,21 +15,17 @@
       justify-content: center;
       align-items: center;
     }
-    /* Outer frame */
+    /* Container do login */
     .login-container {
       width: 90%;
       max-width: 400px;
-      min-height: 420px; /* taller box so nothing overlaps */
       border: 2px solid #b8860b;
       background: #fff;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       border-radius: 8px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       padding: 20px;
     }
-    /* Inner content */
+    /* Conteúdo interno */
     .login-box {
       width: 100%;
       text-align: center;
@@ -38,7 +34,7 @@
       align-items: center;
     }
     .login-box img {
-      height: 40px; /* smaller logo */
+      height: 40px;
       margin-bottom: 15px;
     }
     .login-box h2 {
@@ -64,28 +60,112 @@
       font-size: 16px;
     }
     .hidden { display: none; }
+    header {
+      background-color: #333333;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+    }
+    header img {
+      height: 40px;
+    }
+    h1, h2 {
+      color: #b8860b;
+    }
+    table {
+      width: 100%;
+      margin: 10px auto;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    .section {
+      margin: 20px auto;
+      width: 95%;
+    }
+    canvas {
+      display: block;
+      margin: 20px auto;
+      max-width: 100%;
+    }
+    button {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #b8860b;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <!-- LOGIN -->
   <div id="loginPage" class="login-container">
     <div class="login-box">
-      <img src="logo.png" alt="Clinic Logo">
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlbUqgadabZ0aR3iskzXGWU1EJOGGyuw8kIPW5gFb62gt-4PFwF-FgwuYMsThQiJ9JGP6dSrZMYvbwTI2FXm50XZ_DUVtzg7MmnFkgSaDwmFH0j6eZ6DD0XDMFI1bDNZ4XLZkRp=s680-w680-h510-rw" alt="Clinic Logo">
       <h2>Login</h2>
       <input type="text" id="username" placeholder="Enter Name">
       <input type="password" id="password" placeholder="Enter Password">
-      <button onclick="login()">Login</button>
+      <button type="button" onclick="login()">Login</button>
     </div>
   </div>
 
-  <!-- DASHBOARD (unchanged from before) -->
+  <!-- DASHBOARD -->
   <div id="dashboard" class="hidden">
-    <!-- your dashboard content here -->
+    <header>
+      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlbUqgadabZ0aR3iskzXGWU1EJOGGyuw8kIPW5gFb62gt-4PFwF-FgwuYMsThQiJ9JGP6dSrZMYvbwTI2FXm50XZ_DUVtzg7MmnFkgSaDwmFH0j6eZ6DD0XDMFI1bDNZ4XLZkRp=s680-w680-h510-rw" alt="Clinic Logo">
+      <h1>Faccini Odontologia Dashboard</h1>
+    </header>
+
+    <div class="section">
+      <h2>Patients</h2>
+      <table id="patientsTable">
+        <tr><th>ID</th><th>Name</th><th>Phone</th><th>Notes</th></tr>
+      </table>
+      <button onclick="addPatient()">Add Patient</button>
+    </div>
+
+    <div class="section">
+      <h2>Medications</h2>
+      <table id="medicationsTable">
+        <tr><th>Medication</th><th>Quantity</th><th>Expiration</th><th>Cost</th></tr>
+      </table>
+      <button onclick="addMedication()">Add Medication</button>
+    </div>
+
+    <div class="section">
+      <h2>Materials</h2>
+      <table id="materialsTable">
+        <tr><th>Item</th><th>Quantity</th><th>Location</th><th>Cost</th></tr>
+      </table>
+      <button onclick="addMaterial()">Add Material</button>
+    </div>
+
+    <div class="section">
+      <h2>Financial Summary</h2>
+      <p>Total Value: R$ <span id="totalValue">0</span></p>
+      <p>Expired/Wasted Value: R$ <span id="lostValue">0</span></p>
+      <button onclick="calculateLoss()">Recalculate Loss</button>
+    </div>
+
+    <div class="section">
+      <h2>User Activity</h2>
+      <canvas id="activityChart"></canvas>
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const passwordKey = "EDANA5646";
     const allowedUsers = ["Dr Ed", "Dr Ana", "Gizelle"];
+    let activityLog = { "Dr Ed": 0, "Dr Ana": 0, "Gizelle": 0 };
     let currentUser = "";
 
     function login() {
@@ -95,10 +175,45 @@
         document.getElementById("loginPage").classList.add("hidden");
         document.getElementById("dashboard").classList.remove("hidden");
         currentUser = user;
+        logActivity(user);
       } else {
         alert("Access denied!");
       }
     }
-  </script>
-</body>
-</html>
+
+    function addPatient() {
+      const table = document.getElementById("patientsTable");
+      const row = table.insertRow();
+      row.innerHTML = "<td>New</td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
+      logActivity(currentUser);
+    }
+
+    function addMedication() {
+      const table = document.getElementById("medicationsTable");
+      const row = table.insertRow();
+      row.innerHTML = "<td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
+      logActivity(currentUser);
+    }
+
+    function addMaterial() {
+      const table = document.getElementById("materialsTable");
+      const row = table.insertRow();
+      row.innerHTML = "<td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
+      logActivity(currentUser);
+    }
+
+    function calculateLoss() {
+      let total = 0, lost = 0;
+      const meds = document.getElementById("medicationsTable").rows;
+      for (let i = 1; i < meds.length; i++) {
+        const qty = parseInt(meds[i].cells[1].innerText) || 0;
+        const cost = parseFloat(meds[i].cells[3].innerText) || 0;
+        total += qty * cost;
+        const exp = meds[i].cells[2].innerText;
+        if (exp && new Date(exp) < new Date()) {
+          lost += qty * cost;
+        }
+      }
+      const mats = document.getElementById("materialsTable").rows;
+      for (let i = 1; i < mats.length; i++) {
+        const qty = parseInt(mats[i].cells[1
