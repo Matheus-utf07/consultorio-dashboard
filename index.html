@@ -3,17 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>Faccini Odontologia Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- mobile scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #fdfdfd;
       margin: 0;
       padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
     /* Container do login */
     .login-container {
@@ -24,8 +20,8 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       border-radius: 8px;
       padding: 20px;
+      margin: 80px auto; /* centraliza sem ocupar a tela toda */
     }
-    /* Conteúdo interno */
     .login-box {
       width: 100%;
       text-align: center;
@@ -215,5 +211,3 @@
         }
       }
       const mats = document.getElementById("materialsTable").rows;
-      for (let i = 1; i < mats.length; i++) {
-        const qty = parseInt(mats[i].cells[1
