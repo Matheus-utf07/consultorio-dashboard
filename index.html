@@ -11,7 +11,6 @@
       margin: 0;
       padding: 0;
     }
-    /* Container do login */
     .login-container {
       width: 90%;
       max-width: 400px;
@@ -20,7 +19,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       border-radius: 8px;
       padding: 20px;
-      margin: 100px auto; /* centraliza sem ocupar a tela toda */
+      margin: 100px auto;
     }
     .login-box {
       width: 100%;
@@ -86,11 +85,6 @@
       margin: 20px auto;
       width: 95%;
     }
-    canvas {
-      display: block;
-      margin: 20px auto;
-      max-width: 100%;
-    }
     button {
       margin-top: 10px;
       padding: 8px 12px;
@@ -149,18 +143,11 @@
       <p>Expired/Wasted Value: R$ <span id="lostValue">0</span></p>
       <button onclick="calculateLoss()">Recalculate Loss</button>
     </div>
-
-    <div class="section">
-      <h2>User Activity</h2>
-      <canvas id="activityChart"></canvas>
-    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const passwordKey = "EDANA5646";
     const allowedUsers = ["Dr Ed", "Dr Ana", "Gizelle"];
-    let activityLog = { "Dr Ed": 0, "Dr Ana": 0, "Gizelle": 0 };
     let currentUser = "";
 
     function login() {
@@ -170,7 +157,6 @@
         document.getElementById("loginPage").classList.add("hidden");
         document.getElementById("dashboard").classList.remove("hidden");
         currentUser = user;
-        logActivity(user);
       } else {
         alert("Access denied!");
       }
@@ -180,21 +166,18 @@
       const table = document.getElementById("patientsTable");
       const row = table.insertRow();
       row.innerHTML = "<td>New</td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
-      logActivity(currentUser);
     }
 
     function addMedication() {
       const table = document.getElementById("medicationsTable");
       const row = table.insertRow();
       row.innerHTML = "<td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
-      logActivity(currentUser);
     }
 
     function addMaterial() {
       const table = document.getElementById("materialsTable");
       const row = table.insertRow();
       row.innerHTML = "<td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
-      logActivity(currentUser);
     }
 
     function calculateLoss() {
@@ -217,30 +200,6 @@
       }
       document.getElementById("totalValue").innerText = total.toFixed(2);
       document.getElementById("lostValue").innerText = lost.toFixed(2);
-      logActivity(currentUser);
-    }
-
-    function logActivity(user) {
-      if (user) {
-        activityLog[user]++;
-        updateChart();
-      }
-    }
-
-    function updateChart() {
-      const ctx = document.getElementById("activityChart").getContext("2d");
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: Object.keys(activityLog),
-          datasets: [{
-            label: 'User Activity',
-            data: Object.values(activityLog),
-            backgroundColor: ['#b8860b', '#333333', '#888888']
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
     }
   </script>
 </body>
