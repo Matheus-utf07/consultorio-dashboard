@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Faccini Odontologia Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- mobile scaling -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fdfdfd;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    /* Outer frame */
+    .login-container {
+      width: 90%;
+      max-width: 400px;
+      min-height: 420px; /* taller box so nothing overlaps */
+      border: 2px solid #b8860b;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    /* Inner content */
+    .login-box {
+      width: 100%;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .login-box img {
+      height: 40px; /* smaller logo */
+      margin-bottom: 15px;
+    }
+    .login-box h2 {
+      color: #b8860b;
+      margin-bottom: 20px;
+    }
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background: #b8860b;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="loginPage" class="login-container">
+    <div class="login-box">
+      <img src="logo.png" alt="Clinic Logo">
+      <h2>Login</h2>
+      <input type="text" id="username" placeholder="Enter Name">
+      <input type="password" id="password" placeholder="Enter Password">
+      <button onclick="login()">Login</button>
+    </div>
+  </div>
+
+  <!-- DASHBOARD (unchanged from before) -->
+  <div id="dashboard" class="hidden">
+    <!-- your dashboard content here -->
+  </div>
+
+  <script>
+    const passwordKey = "EDANA5646";
+    const allowedUsers = ["Dr Ed", "Dr Ana", "Gizelle"];
+    let currentUser = "";
+
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if (allowedUsers.includes(user) && pass === passwordKey) {
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        currentUser = user;
+      } else {
+        alert("Access denied!");
+      }
+    }
+  </script>
+</body>
+</html>
