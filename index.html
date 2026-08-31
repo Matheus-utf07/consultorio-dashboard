@@ -1,229 +1,471 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Faccini Odontologia - Sistema</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    :root{
+      --accent:#b8860b;
+      --dark:#333;
+      --bg:#fdfdfd;
+    }
+    *{box-sizing:border-box}
     body {
       font-family: Arial, sans-serif;
-      background-color: #fdfdfd;
+      background-color: var(--bg);
       margin: 0;
       padding: 0;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
+
+    /* LOGIN */
     .login-container {
-      width: 90%;
-      max-width: 400px;
-      border: 2px solid #b8860b;
+      width: 92%;
+      max-width: 420px;
+      border: 2px solid var(--accent);
       background: #fff;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      border-radius: 8px;
-      padding: 20px;
-      margin: 100px auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      border-radius: 10px;
+      padding: 22px;
+      margin: 80px auto;
       position: relative;
-      z-index: 10; /* garante que o botão esteja clicável */
     }
     .login-box {
       width: 100%;
       text-align: center;
       display: flex;
       flex-direction: column;
+      gap: 12px;
       align-items: center;
     }
     .login-box h1 {
-      color: #b8860b;
-      margin-bottom: 20px;
+      color: var(--accent);
+      margin: 0 0 6px 0;
+      font-size: 22px;
     }
     .login-box input {
       width: 100%;
       padding: 12px;
-      margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 5px;
-      font-size: 16px;
+      border-radius: 6px;
+      font-size: 15px;
     }
     .login-box button {
       width: 100%;
       padding: 12px;
-      background: #b8860b;
+      background: var(--accent);
       color: #fff;
       border: none;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 6px;
       font-size: 16px;
     }
-    .hidden { display: none !important; } /* força esconder */
+
+    /* DASHBOARD */
+    .hidden { display: none !important; }
     header {
-      background-color: #333333;
+      background-color: var(--dark);
       color: #fff;
       text-align: center;
-      padding: 15px;
+      padding: 14px 10px;
     }
     header h1 {
       margin: 0;
-      color: #b8860b;
-      background-color: #fff;
-      padding: 10px;
-      border-radius: 5px;
+      color: var(--accent);
+      background: #fff;
       display: inline-block;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 18px;
     }
-    h2 {
-      color: #b8860b;
+
+    .section {
+      margin: 18px auto;
+      width: 95%;
+      max-width: 1100px;
     }
+    h2 { color: var(--accent); margin: 8px 0; }
+
     table {
       width: 100%;
-      margin: 10px auto;
       border-collapse: collapse;
       font-size: 14px;
+      margin-bottom: 8px;
     }
     th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+      vertical-align: middle;
     }
-    th {
-      background-color: #f0f0f0;
-    }
-    .section {
-      margin: 20px auto;
-      width: 95%;
-    }
-    button {
-      margin-top: 10px;
-      padding: 8px 12px;
-      background: #b8860b;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    th { background:#f6f6f6; font-weight:600; }
+    td[contenteditable="true"] { background: #fffbe6; }
+
+    .controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .controls button { padding:8px 12px; border-radius:6px; border:none; background:var(--accent); color:#fff; cursor:pointer; }
+
+    /* small screens */
+    @media (max-width:600px){
+      .login-container { margin: 40px auto; padding:16px; }
+      header h1 { font-size:16px; padding:6px 10px; }
+      th, td { font-size:13px; padding:6px; }
     }
   </style>
 </head>
 <body>
   <!-- LOGIN -->
-  <div id="loginPage" class="login-container">
+  <div id="loginPage" class="login-container" aria-hidden="false">
     <div class="login-box">
       <h1>Faccini Odontologia</h1>
-      <input type="text" id="username" placeholder="Digite seu nome">
-      <input type="password" id="password" placeholder="Digite sua senha">
-      <button id="loginBtn">Entrar</button>
+      <input id="username" type="text" placeholder="Digite seu nome" autocomplete="off" />
+      <input id="password" type="password" placeholder="Digite sua senha" autocomplete="off" />
+      <button id="loginBtn" type="button">Entrar</button>
     </div>
   </div>
 
   <!-- DASHBOARD -->
-  <div id="dashboard" class="hidden">
+  <div id="dashboard" class="hidden" aria-hidden="true">
     <header>
-      <h1>Faccini Odontologia - Dashboard</h1>
+      <h1>Faccini Odontologia - Painel</h1>
     </header>
 
-    <div class="section">
+    <div class="section" id="section-pacientes">
       <h2>Pacientes</h2>
-      <table id="patientsTable">
-        <tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Observações</th></tr>
+      <table id="patientsTable" aria-label="Tabela de pacientes">
+        <thead>
+          <tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Observações</th><th>Ações</th></tr>
+        </thead>
+        <tbody></tbody>
       </table>
-      <button onclick="addPatient()">Adicionar Paciente</button>
+      <div class="controls">
+        <button id="addPatientBtn">Adicionar Paciente</button>
+        <button id="clearPatientsBtn">Limpar Pacientes</button>
+      </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="section-medicamentos">
       <h2>Medicamentos</h2>
-      <table id="medicationsTable">
-        <tr><th>Medicamento</th><th>Quantidade</th><th>Validade</th><th>Custo</th></tr>
+      <table id="medicationsTable" aria-label="Tabela de medicamentos">
+        <thead>
+          <tr><th>Medicamento</th><th>Quantidade</th><th>Validade (YYYY-MM-DD)</th><th>Custo</th><th>Ações</th></tr>
+        </thead>
+        <tbody></tbody>
       </table>
-      <button onclick="addMedication()">Adicionar Medicamento</button>
+      <div class="controls">
+        <button id="addMedicationBtn">Adicionar Medicamento</button>
+        <button id="clearMedicationsBtn">Limpar Medicamentos</button>
+      </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="section-materiais">
       <h2>Materiais</h2>
-      <table id="materialsTable">
-        <tr><th>Item</th><th>Quantidade</th><th>Local</th><th>Custo</th></tr>
+      <table id="materialsTable" aria-label="Tabela de materiais">
+        <thead>
+          <tr><th>Item</th><th>Quantidade</th><th>Local</th><th>Custo</th><th>Ações</th></tr>
+        </thead>
+        <tbody></tbody>
       </table>
-      <button onclick="addMaterial()">Adicionar Material</button>
+      <div class="controls">
+        <button id="addMaterialBtn">Adicionar Material</button>
+        <button id="clearMaterialsBtn">Limpar Materiais</button>
+      </div>
     </div>
 
-    <div class="section">
+    <div class="section" id="section-financeiro">
       <h2>Resumo Financeiro</h2>
-      <p>Valor Total: R$ <span id="totalValue">0</span></p>
-      <p>Valor Perdido (vencido): R$ <span id="lostValue">0</span></p>
-      <button onclick="calculateLoss()">Recalcular</button>
+      <p>Valor Total: R$ <span id="totalValue">0.00</span></p>
+      <p>Valor Perdido (vencido): R$ <span id="lostValue">0.00</span></p>
+      <div class="controls">
+        <button id="recalculateBtn">Recalcular</button>
+        <button id="exportBtn">Exportar (JSON)</button>
+        <button id="logoutBtn">Sair</button>
+      </div>
     </div>
   </div>
 
   <script>
-    const passwordKey = "EDANA5646";
-    const allowedUsers = ["Dr Ed", "Dr Ana", "Gizelle"];
-    let currentUser = "";
+    (function () {
+      // Configurações
+      const passwordKey = "EDANA5646";
+      const allowedUsers = ["Dr Ed", "Dr Ana", "Gizelle"];
 
-    // Ativar botão via addEventListener (mais seguro que onclick inline)
-    document.getElementById("loginBtn").addEventListener("click", login);
+      // Elementos
+      const loginPage = document.getElementById("loginPage");
+      const dashboard = document.getElementById("dashboard");
+      const loginBtn = document.getElementById("loginBtn");
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+      const logoutBtn = document.getElementById("logoutBtn");
 
-    // Carregar dados salvos
-    window.onload = function() {
-      loadTable("patientsTable");
-      loadTable("medicationsTable");
-      loadTable("materialsTable");
-      document.getElementById("totalValue").innerText = localStorage.getItem("totalValue") || "0";
-      document.getElementById("lostValue").innerText = localStorage.getItem("lostValue") || "0";
-    };
+      const patientsTableBody = document.querySelector("#patientsTable tbody");
+      const medicationsTableBody = document.querySelector("#medicationsTable tbody");
+      const materialsTableBody = document.querySelector("#materialsTable tbody");
 
-    function login() {
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value.trim();
-      if (allowedUsers.includes(user) && pass === passwordKey) {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
-        currentUser = user;
-      } else {
-        alert("Acesso negado!");
+      const addPatientBtn = document.getElementById("addPatientBtn");
+      const addMedicationBtn = document.getElementById("addMedicationBtn");
+      const addMaterialBtn = document.getElementById("addMaterialBtn");
+
+      const clearPatientsBtn = document.getElementById("clearPatientsBtn");
+      const clearMedicationsBtn = document.getElementById("clearMedicationsBtn");
+      const clearMaterialsBtn = document.getElementById("clearMaterialsBtn");
+
+      const totalValueEl = document.getElementById("totalValue");
+      const lostValueEl = document.getElementById("lostValue");
+      const recalculateBtn = document.getElementById("recalculateBtn");
+      const exportBtn = document.getElementById("exportBtn");
+
+      // Keys localStorage
+      const LS_PATIENTS = "faccini_patients_v1";
+      const LS_MEDICATIONS = "faccini_medications_v1";
+      const LS_MATERIALS = "faccini_materials_v1";
+      const LS_TOTAL = "faccini_total_v1";
+      const LS_LOST = "faccini_lost_v1";
+
+      // Inicialização segura após DOM pronto
+      document.addEventListener("DOMContentLoaded", init);
+
+      function init() {
+        // Eventos de login/logout
+        loginBtn.addEventListener("click", handleLogin);
+        logoutBtn.addEventListener("click", handleLogout);
+        passwordInput.addEventListener("keyup", function(e){
+          if(e.key === "Enter") loginBtn.click();
+        });
+        usernameInput.addEventListener("keyup", function(e){
+          if(e.key === "Enter") loginBtn.click();
+        });
+
+        // Eventos de adicionar/limpar
+        addPatientBtn.addEventListener("click", () => addRow("patients"));
+        addMedicationBtn.addEventListener("click", () => addRow("medications"));
+        addMaterialBtn.addEventListener("click", () => addRow("materials"));
+
+        clearPatientsBtn.addEventListener("click", () => clearTable("patients"));
+        clearMedicationsBtn.addEventListener("click", () => clearTable("medications"));
+        clearMaterialsBtn.addEventListener("click", () => clearTable("materials"));
+
+        recalculateBtn.addEventListener("click", calculateLoss);
+        exportBtn.addEventListener("click", exportJSON);
+
+        // Carregar dados salvos
+        loadAllTables();
+        // Atualiza valores financeiros salvos
+        totalValueEl.textContent = localStorage.getItem(LS_TOTAL) || "0.00";
+        lostValueEl.textContent = localStorage.getItem(LS_LOST) || "0.00";
+
+        // Salva automaticamente antes de fechar
+        window.addEventListener("beforeunload", () => {
+          saveAllTables();
+        });
       }
-    }
 
-    function addPatient() {
-      const table = document.getElementById("patientsTable");
-      const row = table.insertRow();
-      row.innerHTML = "<td>Novo</td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
-      saveTable("patientsTable");
-    }
-
-    function addMedication() {
-      const table = document.getElementById("medicationsTable");
-      const row = table.insertRow();
-      row.innerHTML = "<td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
-      saveTable("medicationsTable");
-    }
-
-    function addMaterial() {
-      const table = document.getElementById("materialsTable");
-      const row = table.insertRow();
-      row.innerHTML = "<td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
-      saveTable("materialsTable");
-    }
-
-    function calculateLoss() {
-      let total = 0, lost = 0;
-      const meds = document.getElementById("medicationsTable").rows;
-      for (let i = 1; i < meds.length; i++) {
-        const qty = parseInt(meds[i].cells[1].innerText) || 0;
-        const cost = parseFloat(meds[i].cells[3].innerText) || 0;
-        total += qty * cost;
-        const exp = meds[i].cells[2].innerText;
-        if (exp && new Date(exp) < new Date()) {
-          lost += qty * cost;
+      // LOGIN
+      function handleLogin() {
+        const user = usernameInput.value.trim();
+        const pass = passwordInput.value.trim();
+        if (allowedUsers.includes(user) && pass === passwordKey) {
+          loginPage.classList.add("hidden");
+          loginPage.setAttribute("aria-hidden","true");
+          dashboard.classList.remove("hidden");
+          dashboard.setAttribute("aria-hidden","false");
+          usernameInput.value = "";
+          passwordInput.value = "";
+        } else {
+          alert("Acesso negado! Verifique usuário e senha.");
         }
       }
-      const mats = document.getElementById("materialsTable").rows;
-      for (let i = 1; i < mats.length; i++) {
-        const qty = parseInt(mats[i].cells[1].innerText) || 0;
-        const cost = parseFloat(mats[i].cells[3].innerText) || 0;
-        total += qty * cost;
-      }
-      document.getElementById("totalValue").innerText = total.toFixed(2);
-      document.getElementById("lostValue").innerText = lost.toFixed(2);
-      localStorage.setItem("totalValue", total.toFixed(2));
-      localStorage.setItem("lostValue", lost.toFixed(2));
-    }
 
-    // Funções de salvamento automático
-    function saveTable(tableId) {
-      const table = document.getElementById(tableId);
-      let data = [];
-      for (let i = 1; i < table.rows.length; i++) {
-        let row = [];
+      function handleLogout() {
+        dashboard.classList.add("hidden");
+        dashboard.setAttribute("aria-hidden","true");
+        loginPage.classList.remove("hidden");
+        loginPage.setAttribute("aria-hidden","false");
+      }
+
+      // ADICIONAR LINHA (gera linha com células editáveis e botão remover)
+      function addRow(type, rowData = null) {
+        let tbody, cols;
+        if (type === "patients") {
+          tbody = patientsTableBody;
+          cols = ["ID","Nome","Telefone","Observações"];
+        } else if (type === "medications") {
+          tbody = medicationsTableBody;
+          cols = ["Medicamento","Quantidade","Validade","Custo"];
+        } else {
+          tbody = materialsTableBody;
+          cols = ["Item","Quantidade","Local","Custo"];
+        }
+
+        const tr = document.createElement("tr");
+
+        // Cria células conforme colunas + ação remover
+        cols.forEach((col, idx) => {
+          const td = document.createElement("td");
+          td.contentEditable = "true";
+          td.spellcheck = false;
+          td.dataset.col = idx;
+          // Se rowData fornecido, preenche
+          if (rowData && typeof rowData[idx] !== "undefined") td.innerText = rowData[idx];
+          // Escuta mudanças para salvar automaticamente
+          td.addEventListener("input", () => {
+            saveTableByType(type);
+          });
+          tr.appendChild(td);
+        });
+
+        // Coluna de ações
+        const actionTd = document.createElement("td");
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.textContent = "Remover";
+        removeBtn.style.background = "#e04b4b";
+        removeBtn.style.border = "none";
+        removeBtn.style.color = "#fff";
+        removeBtn.style.padding = "6px 8px";
+        removeBtn.style.borderRadius = "6px";
+        removeBtn.style.cursor = "pointer";
+        removeBtn.addEventListener("click", () => {
+          tr.remove();
+          saveTableByType(type);
+        });
+        actionTd.appendChild(removeBtn);
+        tr.appendChild(actionTd);
+
+        tbody.appendChild(tr);
+        saveTableByType(type);
+      }
+
+      // SALVAR / CARREGAR por tipo
+      function saveTableByType(type) {
+        if (type === "patients") saveTable(LS_PATIENTS, patientsTableBody);
+        else if (type === "medications") saveTable(LS_MEDICATIONS, medicationsTableBody);
+        else if (type === "materials") saveTable(LS_MATERIALS, materialsTableBody);
+      }
+
+      function saveTable(lsKey, tbody) {
+        const rows = [];
+        for (let r = 0; r < tbody.rows.length; r++) {
+          const cells = tbody.rows[r].cells;
+          const row = [];
+          for (let c = 0; c < cells.length - 1; c++) { // ignora coluna Ações
+            row.push(cells[c].innerText.trim());
+          }
+          rows.push(row);
+        }
+        localStorage.setItem(lsKey, JSON.stringify(rows));
+      }
+
+      function loadTable(lsKey, tbody, type) {
+        const raw = localStorage.getItem(lsKey);
+        if (!raw) return;
+        try {
+          const data = JSON.parse(raw);
+          if (!Array.isArray(data)) return;
+          // Limpa tabela atual
+          tbody.innerHTML = "";
+          data.forEach(row => addRow(type, row));
+        } catch (e) {
+          console.warn("Erro ao carregar tabela", lsKey, e);
+        }
+      }
+
+      function loadAllTables() {
+        loadTable(LS_PATIENTS, patientsTableBody, "patients");
+        loadTable(LS_MEDICATIONS, medicationsTableBody, "medications");
+        loadTable(LS_MATERIALS, materialsTableBody, "materials");
+      }
+
+      function saveAllTables() {
+        saveTable(LS_PATIENTS, patientsTableBody);
+        saveTable(LS_MEDICATIONS, medicationsTableBody);
+        saveTable(LS_MATERIALS, materialsTableBody);
+      }
+
+      // LIMPAR TABELA
+      function clearTable(type) {
+        if (!confirm("Tem certeza que deseja limpar esta tabela? Esta ação não pode ser desfeita.")) return;
+        if (type === "patients") {
+          patientsTableBody.innerHTML = "";
+          localStorage.removeItem(LS_PATIENTS);
+        } else if (type === "medications") {
+          medicationsTableBody.innerHTML = "";
+          localStorage.removeItem(LS_MEDICATIONS);
+        } else {
+          materialsTableBody.innerHTML = "";
+          localStorage.removeItem(LS_MATERIALS);
+        }
+        // recalcula valores
+        calculateLoss();
+      }
+
+      // CÁLCULO FINANCEIRO
+      function calculateLoss() {
+        let total = 0;
+        let lost = 0;
+
+        // Medicamentos: coluna 1 = quantidade, coluna 2 = validade, coluna 3 = custo
+        for (let r = 0; r < medicationsTableBody.rows.length; r++) {
+          const cells = medicationsTableBody.rows[r].cells;
+          const qty = parseFloat(cells[1].innerText.replace(",",".").trim()) || 0;
+          const cost = parseFloat(cells[3].innerText.replace(",",".").trim()) || 0;
+          total += qty * cost;
+          const expText = cells[2].innerText.trim();
+          if (expText) {
+            const expDate = parseDateISO(expText);
+            if (expDate && expDate < new Date()) {
+              lost += qty * cost;
+            }
+          }
+        }
+
+        // Materiais: coluna 1 = quantidade, coluna 3 = custo (index 3)
+        for (let r = 0; r < materialsTableBody.rows.length; r++) {
+          const cells = materialsTableBody.rows[r].cells;
+          const qty = parseFloat(cells[1].innerText.replace(",",".").trim()) || 0;
+          const cost = parseFloat(cells[3].innerText.replace(",",".").trim()) || 0;
+          total += qty * cost;
+        }
+
+        totalValueEl.textContent = total.toFixed(2);
+        lostValueEl.textContent = lost.toFixed(2);
+        localStorage.setItem(LS_TOTAL, total.toFixed(2));
+        localStorage.setItem(LS_LOST, lost.toFixed(2));
+      }
+
+      // Exporta dados como JSON (abre em nova aba)
+      function exportJSON() {
+        saveAllTables();
+        const data = {
+          pacientes: JSON.parse(localStorage.getItem(LS_PATIENTS) || "[]"),
+          medicamentos: JSON.parse(localStorage.getItem(LS_MEDICATIONS) || "[]"),
+          materiais: JSON.parse(localStorage.getItem(LS_MATERIALS) || "[]"),
+          total: localStorage.getItem(LS_TOTAL) || "0.00",
+          lost: localStorage.getItem(LS_LOST) || "0.00"
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "faccini_dados.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      // Utilitários
+      function parseDateISO(text) {
+        // aceita YYYY-MM-DD ou YYYY/MM/DD
+        const t = text.trim();
+        if (!t) return null;
+        const iso = t.replace(/\//g,"-");
+        const d = new Date(iso + "T00:00:00");
+        return isNaN(d.getTime()) ? null : d;
+      }
+
+    })();
+  </script>
+</body>
+</html>
