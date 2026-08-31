@@ -20,7 +20,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       border-radius: 8px;
       padding: 20px;
-      margin: 80px auto;
+      margin: 100px auto; /* centraliza sem ocupar a tela toda */
     }
     .login-box {
       width: 100%;
@@ -30,10 +30,6 @@
       align-items: center;
     }
     .login-box h1 {
-      color: #b8860b;
-      margin-bottom: 10px;
-    }
-    .login-box h2 {
       color: #b8860b;
       margin-bottom: 20px;
     }
@@ -111,7 +107,6 @@
   <div id="loginPage" class="login-container">
     <div class="login-box">
       <h1>Faccini Odontologia</h1>
-      <h2>Login</h2>
       <input type="text" id="username" placeholder="Enter Name">
       <input type="password" id="password" placeholder="Enter Password">
       <button type="button" onclick="login()">Login</button>
