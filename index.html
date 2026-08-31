@@ -20,7 +20,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       border-radius: 8px;
       padding: 20px;
-      margin: 80px auto; /* centraliza sem ocupar a tela toda */
+      margin: 80px auto;
     }
     .login-box {
       width: 100%;
@@ -29,9 +29,9 @@
       flex-direction: column;
       align-items: center;
     }
-    .login-box img {
-      height: 40px;
-      margin-bottom: 15px;
+    .login-box h1 {
+      color: #b8860b;
+      margin-bottom: 10px;
     }
     .login-box h2 {
       color: #b8860b;
@@ -62,10 +62,15 @@
       text-align: center;
       padding: 15px;
     }
-    header img {
-      height: 40px;
+    header h1 {
+      margin: 0;
+      color: #b8860b;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      display: inline-block;
     }
-    h1, h2 {
+    h2 {
       color: #b8860b;
     }
     table {
@@ -105,7 +110,7 @@
   <!-- LOGIN -->
   <div id="loginPage" class="login-container">
     <div class="login-box">
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlbUqgadabZ0aR3iskzXGWU1EJOGGyuw8kIPW5gFb62gt-4PFwF-FgwuYMsThQiJ9JGP6dSrZMYvbwTI2FXm50XZ_DUVtzg7MmnFkgSaDwmFH0j6eZ6DD0XDMFI1bDNZ4XLZkRp=s680-w680-h510-rw" alt="Clinic Logo">
+      <h1>Faccini Odontologia</h1>
       <h2>Login</h2>
       <input type="text" id="username" placeholder="Enter Name">
       <input type="password" id="password" placeholder="Enter Password">
@@ -116,7 +121,6 @@
   <!-- DASHBOARD -->
   <div id="dashboard" class="hidden">
     <header>
-      <img src="https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlbUqgadabZ0aR3iskzXGWU1EJOGGyuw8kIPW5gFb62gt-4PFwF-FgwuYMsThQiJ9JGP6dSrZMYvbwTI2FXm50XZ_DUVtzg7MmnFkgSaDwmFH0j6eZ6DD0XDMFI1bDNZ4XLZkRp=s680-w680-h510-rw" alt="Clinic Logo">
       <h1>Faccini Odontologia Dashboard</h1>
     </header>
 
@@ -211,3 +215,38 @@
         }
       }
       const mats = document.getElementById("materialsTable").rows;
+      for (let i = 1; i < mats.length; i++) {
+        const qty = parseInt(mats[i].cells[1].innerText) || 0;
+        const cost = parseFloat(mats[i].cells[3].innerText) || 0;
+        total += qty * cost;
+      }
+      document.getElementById("totalValue").innerText = total.toFixed(2);
+      document.getElementById("lostValue").innerText = lost.toFixed(2);
+      logActivity(currentUser);
+    }
+
+    function logActivity(user) {
+      if (user) {
+        activityLog[user]++;
+        updateChart();
+      }
+    }
+
+    function updateChart() {
+      const ctx = document.getElementById("activityChart").getContext("2d");
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: Object.keys(activityLog),
+          datasets: [{
+            label: 'User Activity',
+            data: Object.values(activityLog),
+            backgroundColor: ['#b8860b', '#333333', '#888888']
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+    }
+  </script>
+</body>
+</html>
