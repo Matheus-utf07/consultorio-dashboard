@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Faccini Odontologia Dashboard</title>
+  <title>Faccini Odontologia - Sistema</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -101,47 +101,47 @@
   <div id="loginPage" class="login-container">
     <div class="login-box">
       <h1>Faccini Odontologia</h1>
-      <input type="text" id="username" placeholder="Enter Name">
-      <input type="password" id="password" placeholder="Enter Password">
-      <button type="button" onclick="login()">Login</button>
+      <input type="text" id="username" placeholder="Digite seu nome">
+      <input type="password" id="password" placeholder="Digite sua senha">
+      <button type="button" onclick="login()">Entrar</button>
     </div>
   </div>
 
   <!-- DASHBOARD -->
   <div id="dashboard" class="hidden">
     <header>
-      <h1>Faccini Odontologia Dashboard</h1>
+      <h1>Faccini Odontologia - Dashboard</h1>
     </header>
 
     <div class="section">
-      <h2>Patients</h2>
+      <h2>Pacientes</h2>
       <table id="patientsTable">
-        <tr><th>ID</th><th>Name</th><th>Phone</th><th>Notes</th></tr>
+        <tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Observações</th></tr>
       </table>
-      <button onclick="addPatient()">Add Patient</button>
+      <button onclick="addPatient()">Adicionar Paciente</button>
     </div>
 
     <div class="section">
-      <h2>Medications</h2>
+      <h2>Medicamentos</h2>
       <table id="medicationsTable">
-        <tr><th>Medication</th><th>Quantity</th><th>Expiration</th><th>Cost</th></tr>
+        <tr><th>Medicamento</th><th>Quantidade</th><th>Validade</th><th>Custo</th></tr>
       </table>
-      <button onclick="addMedication()">Add Medication</button>
+      <button onclick="addMedication()">Adicionar Medicamento</button>
     </div>
 
     <div class="section">
-      <h2>Materials</h2>
+      <h2>Materiais</h2>
       <table id="materialsTable">
-        <tr><th>Item</th><th>Quantity</th><th>Location</th><th>Cost</th></tr>
+        <tr><th>Item</th><th>Quantidade</th><th>Local</th><th>Custo</th></tr>
       </table>
-      <button onclick="addMaterial()">Add Material</button>
+      <button onclick="addMaterial()">Adicionar Material</button>
     </div>
 
     <div class="section">
-      <h2>Financial Summary</h2>
-      <p>Total Value: R$ <span id="totalValue">0</span></p>
-      <p>Expired/Wasted Value: R$ <span id="lostValue">0</span></p>
-      <button onclick="calculateLoss()">Recalculate Loss</button>
+      <h2>Resumo Financeiro</h2>
+      <p>Valor Total: R$ <span id="totalValue">0</span></p>
+      <p>Valor Perdido (vencido): R$ <span id="lostValue">0</span></p>
+      <button onclick="calculateLoss()">Recalcular</button>
     </div>
   </div>
 
@@ -149,6 +149,15 @@
     const passwordKey = "EDANA5646";
     const allowedUsers = ["Dr Ed", "Dr Ana", "Gizelle"];
     let currentUser = "";
+
+    // Carregar dados salvos
+    window.onload = function() {
+      loadTable("patientsTable");
+      loadTable("medicationsTable");
+      loadTable("materialsTable");
+      document.getElementById("totalValue").innerText = localStorage.getItem("totalValue") || "0";
+      document.getElementById("lostValue").innerText = localStorage.getItem("lostValue") || "0";
+    };
 
     function login() {
       const user = document.getElementById("username").value;
@@ -158,26 +167,29 @@
         document.getElementById("dashboard").classList.remove("hidden");
         currentUser = user;
       } else {
-        alert("Access denied!");
+        alert("Acesso negado!");
       }
     }
 
     function addPatient() {
       const table = document.getElementById("patientsTable");
       const row = table.insertRow();
-      row.innerHTML = "<td>New</td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
+      row.innerHTML = "<td>Novo</td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
+      saveTable("patientsTable");
     }
 
     function addMedication() {
       const table = document.getElementById("medicationsTable");
       const row = table.insertRow();
       row.innerHTML = "<td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
+      saveTable("medicationsTable");
     }
 
     function addMaterial() {
       const table = document.getElementById("materialsTable");
       const row = table.insertRow();
       row.innerHTML = "<td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td><td contenteditable='true'></td>";
+      saveTable("materialsTable");
     }
 
     function calculateLoss() {
@@ -200,7 +212,25 @@
       }
       document.getElementById("totalValue").innerText = total.toFixed(2);
       document.getElementById("lostValue").innerText = lost.toFixed(2);
+      localStorage.setItem("totalValue", total.toFixed(2));
+      localStorage.setItem("lostValue", lost.toFixed(2));
     }
-  </script>
-</body>
-</html>
+
+    // Funções de salvamento automático
+    function saveTable(tableId) {
+      const table = document.getElementById(tableId);
+      let data = [];
+      for (let i = 1; i < table.rows.length; i++) {
+        let row = [];
+        for (let j = 0; j < table.rows[i].cells.length; j++) {
+          row.push(table.rows[i].cells[j].innerText);
+        }
+        data.push(row);
+      }
+      localStorage.setItem(tableId, JSON.stringify(data));
+    }
+
+    function loadTable(tableId) {
+      const table = document.getElementById(tableId);
+      const data = JSON.parse(localStorage.getItem(tableId)) || [];
+      for (let i = 0; i < data.length
