@@ -1,187 +1,150 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <title>Faccini Odontologia - Sistema</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <style>
     :root{
       --accent:#b8860b;
       --dark:#333;
-      --bg:#fdfdfd;
+      --bg:#f7f7f7;
     }
     *{box-sizing:border-box}
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--bg);
-      margin: 0;
-      padding: 0;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+    html,body{height:100%;margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);-webkit-font-smoothing:antialiased}
+    /* Layout centralizado */
+    .wrap {
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
     }
 
-    /* LOGIN */
+    /* Caixa de login */
     .login-container {
-      width: 92%;
-      max-width: 420px;
-      border: 2px solid var(--accent);
-      background: #fff;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      border-radius: 10px;
-      padding: 22px;
-      margin: 80px auto;
-      position: relative;
+      width:100%;
+      max-width:420px;
+      background:#fff;
+      border:2px solid var(--accent);
+      border-radius:10px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.08);
+      padding:22px;
     }
-    .login-box {
-      width: 100%;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items: center;
+    .login-title { color:var(--accent); margin:0 0 12px 0; font-size:20px; text-align:center; }
+    .field { width:100%; margin-bottom:12px; }
+    .field input {
+      width:100%;
+      padding:12px;
+      border:1px solid #ccc;
+      border-radius:6px;
+      font-size:15px;
     }
-    .login-box h1 {
-      color: var(--accent);
-      margin: 0 0 6px 0;
-      font-size: 22px;
+    .btn {
+      width:100%;
+      padding:12px;
+      background:var(--accent);
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      font-size:16px;
+      cursor:pointer;
     }
-    .login-box input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 15px;
-    }
-    .login-box button {
-      width: 100%;
-      padding: 12px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      cursor: pointer;
-      border-radius: 6px;
-      font-size: 16px;
-    }
-
-    /* DASHBOARD */
-    .hidden { display: none !important; }
+    .btn:active{transform:translateY(1px)}
+    /* Dashboard */
+    .hidden{display:none !important}
     header {
-      background-color: var(--dark);
-      color: #fff;
-      text-align: center;
-      padding: 14px 10px;
+      background:var(--dark);
+      color:#fff;
+      text-align:center;
+      padding:14px;
     }
-    header h1 {
-      margin: 0;
-      color: var(--accent);
-      background: #fff;
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 18px;
-    }
-
-    .section {
-      margin: 18px auto;
-      width: 95%;
-      max-width: 1100px;
-    }
-    h2 { color: var(--accent); margin: 8px 0; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      margin-bottom: 8px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: left;
-      vertical-align: middle;
-    }
+    header h1 { margin:0; color:var(--accent); background:#fff; display:inline-block; padding:8px 12px; border-radius:6px; }
+    .container { width:95%; max-width:1100px; margin:18px auto; }
+    h2 { color:var(--accent); margin:8px 0; }
+    table { width:100%; border-collapse:collapse; margin-bottom:8px; font-size:14px; }
+    th,td { border:1px solid #ddd; padding:8px; text-align:left; vertical-align:middle; }
     th { background:#f6f6f6; font-weight:600; }
-    td[contenteditable="true"] { background: #fffbe6; }
-
+    td[contenteditable="true"]{ background:#fffbe6; }
     .controls { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
-    .controls button { padding:8px 12px; border-radius:6px; border:none; background:var(--accent); color:#fff; cursor:pointer; }
-
-    /* small screens */
+    .controls .small-btn { padding:8px 12px; border-radius:6px; border:none; background:var(--accent); color:#fff; cursor:pointer; }
+    .remove-btn { background:#e04b4b; }
     @media (max-width:600px){
-      .login-container { margin: 40px auto; padding:16px; }
-      header h1 { font-size:16px; padding:6px 10px; }
-      th, td { font-size:13px; padding:6px; }
+      .login-container{padding:16px}
+      header h1{font-size:16px;padding:6px 10px}
+      th,td{font-size:13px;padding:6px}
     }
   </style>
 </head>
 <body>
-  <!-- LOGIN -->
-  <div id="loginPage" class="login-container" aria-hidden="false">
-    <div class="login-box">
-      <h1>Faccini Odontologia</h1>
-      <input id="username" type="text" placeholder="Digite seu nome" autocomplete="off" />
-      <input id="password" type="password" placeholder="Digite sua senha" autocomplete="off" />
-      <button id="loginBtn" type="button">Entrar</button>
+  <div class="wrap">
+    <!-- LOGIN -->
+    <div id="loginPage" class="login-container" aria-hidden="false">
+      <h2 class="login-title">Faccini Odontologia</h2>
+
+      <div class="field">
+        <input id="username" type="text" placeholder="Digite seu nome" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <input id="password" type="password" placeholder="Digite sua senha" autocomplete="off" />
+      </div>
+
+      <button id="loginBtn" class="btn" type="button" aria-pressed="false">Entrar</button>
     </div>
   </div>
 
   <!-- DASHBOARD -->
   <div id="dashboard" class="hidden" aria-hidden="true">
-    <header>
-      <h1>Faccini Odontologia - Painel</h1>
-    </header>
+    <header><h1>Faccini Odontologia - Painel</h1></header>
 
-    <div class="section" id="section-pacientes">
-      <h2>Pacientes</h2>
-      <table id="patientsTable" aria-label="Tabela de pacientes">
-        <thead>
-          <tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Observações</th><th>Ações</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <div class="controls">
-        <button id="addPatientBtn">Adicionar Paciente</button>
-        <button id="clearPatientsBtn">Limpar Pacientes</button>
-      </div>
-    </div>
+    <div class="container">
+      <section id="section-pacientes">
+        <h2>Pacientes</h2>
+        <table id="patientsTable" aria-label="Tabela de pacientes">
+          <thead><tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Observações</th><th>Ações</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="controls">
+          <button id="addPatientBtn" class="small-btn">Adicionar Paciente</button>
+          <button id="clearPatientsBtn" class="small-btn">Limpar Pacientes</button>
+        </div>
+      </section>
 
-    <div class="section" id="section-medicamentos">
-      <h2>Medicamentos</h2>
-      <table id="medicationsTable" aria-label="Tabela de medicamentos">
-        <thead>
-          <tr><th>Medicamento</th><th>Quantidade</th><th>Validade (YYYY-MM-DD)</th><th>Custo</th><th>Ações</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <div class="controls">
-        <button id="addMedicationBtn">Adicionar Medicamento</button>
-        <button id="clearMedicationsBtn">Limpar Medicamentos</button>
-      </div>
-    </div>
+      <section id="section-medicamentos">
+        <h2>Medicamentos</h2>
+        <table id="medicationsTable" aria-label="Tabela de medicamentos">
+          <thead><tr><th>Medicamento</th><th>Quantidade</th><th>Validade (YYYY-MM-DD)</th><th>Custo</th><th>Ações</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="controls">
+          <button id="addMedicationBtn" class="small-btn">Adicionar Medicamento</button>
+          <button id="clearMedicationsBtn" class="small-btn">Limpar Medicamentos</button>
+        </div>
+      </section>
 
-    <div class="section" id="section-materiais">
-      <h2>Materiais</h2>
-      <table id="materialsTable" aria-label="Tabela de materiais">
-        <thead>
-          <tr><th>Item</th><th>Quantidade</th><th>Local</th><th>Custo</th><th>Ações</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <div class="controls">
-        <button id="addMaterialBtn">Adicionar Material</button>
-        <button id="clearMaterialsBtn">Limpar Materiais</button>
-      </div>
-    </div>
+      <section id="section-materiais">
+        <h2>Materiais</h2>
+        <table id="materialsTable" aria-label="Tabela de materiais">
+          <thead><tr><th>Item</th><th>Quantidade</th><th>Local</th><th>Custo</th><th>Ações</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="controls">
+          <button id="addMaterialBtn" class="small-btn">Adicionar Material</button>
+          <button id="clearMaterialsBtn" class="small-btn">Limpar Materiais</button>
+        </div>
+      </section>
 
-    <div class="section" id="section-financeiro">
-      <h2>Resumo Financeiro</h2>
-      <p>Valor Total: R$ <span id="totalValue">0.00</span></p>
-      <p>Valor Perdido (vencido): R$ <span id="lostValue">0.00</span></p>
-      <div class="controls">
-        <button id="recalculateBtn">Recalcular</button>
-        <button id="exportBtn">Exportar (JSON)</button>
-        <button id="logoutBtn">Sair</button>
-      </div>
+      <section id="section-financeiro">
+        <h2>Resumo Financeiro</h2>
+        <p>Valor Total: R$ <span id="totalValue">0.00</span></p>
+        <p>Valor Perdido (vencido): R$ <span id="lostValue">0.00</span></p>
+        <div class="controls">
+          <button id="recalculateBtn" class="small-btn">Recalcular</button>
+          <button id="exportBtn" class="small-btn">Exportar (JSON)</button>
+          <button id="logoutBtn" class="small-btn">Sair</button>
+        </div>
+      </section>
     </div>
   </div>
 
@@ -223,18 +186,20 @@
       const LS_TOTAL = "faccini_total_v1";
       const LS_LOST = "faccini_lost_v1";
 
-      // Inicialização segura após DOM pronto
-      document.addEventListener("DOMContentLoaded", init);
-
-      function init() {
+      // Inicialização
+      document.addEventListener("DOMContentLoaded", () => {
         // Eventos de login/logout
         loginBtn.addEventListener("click", handleLogin);
-        logoutBtn.addEventListener("click", handleLogout);
-        passwordInput.addEventListener("keyup", function(e){
-          if(e.key === "Enter") loginBtn.click();
-        });
-        usernameInput.addEventListener("keyup", function(e){
-          if(e.key === "Enter") loginBtn.click();
+        logoutBtn && logoutBtn.addEventListener("click", handleLogout);
+
+        // Permitir Enter para entrar
+        [usernameInput, passwordInput].forEach(el => {
+          el.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              loginBtn.click();
+            }
+          });
         });
 
         // Eventos de adicionar/limpar
@@ -251,25 +216,25 @@
 
         // Carregar dados salvos
         loadAllTables();
-        // Atualiza valores financeiros salvos
         totalValueEl.textContent = localStorage.getItem(LS_TOTAL) || "0.00";
         lostValueEl.textContent = localStorage.getItem(LS_LOST) || "0.00";
 
-        // Salva automaticamente antes de fechar
-        window.addEventListener("beforeunload", () => {
-          saveAllTables();
-        });
-      }
+        // Salvar automaticamente antes de fechar
+        window.addEventListener("beforeunload", saveAllTables);
+      });
 
       // LOGIN
       function handleLogin() {
         const user = usernameInput.value.trim();
         const pass = passwordInput.value.trim();
+        // validação simples
         if (allowedUsers.includes(user) && pass === passwordKey) {
+          // esconder login e mostrar dashboard
           loginPage.classList.add("hidden");
           loginPage.setAttribute("aria-hidden","true");
           dashboard.classList.remove("hidden");
           dashboard.setAttribute("aria-hidden","false");
+          // limpa campos
           usernameInput.value = "";
           passwordInput.value = "";
         } else {
@@ -284,7 +249,7 @@
         loginPage.setAttribute("aria-hidden","false");
       }
 
-      // ADICIONAR LINHA (gera linha com células editáveis e botão remover)
+      // ADICIONAR LINHA
       function addRow(type, rowData = null) {
         let tbody, cols;
         if (type === "patients") {
@@ -300,32 +265,22 @@
 
         const tr = document.createElement("tr");
 
-        // Cria células conforme colunas + ação remover
         cols.forEach((col, idx) => {
           const td = document.createElement("td");
           td.contentEditable = "true";
           td.spellcheck = false;
           td.dataset.col = idx;
-          // Se rowData fornecido, preenche
           if (rowData && typeof rowData[idx] !== "undefined") td.innerText = rowData[idx];
-          // Escuta mudanças para salvar automaticamente
-          td.addEventListener("input", () => {
-            saveTableByType(type);
-          });
+          td.addEventListener("input", () => saveTableByType(type));
           tr.appendChild(td);
         });
 
-        // Coluna de ações
+        // Ações
         const actionTd = document.createElement("td");
         const removeBtn = document.createElement("button");
         removeBtn.type = "button";
         removeBtn.textContent = "Remover";
-        removeBtn.style.background = "#e04b4b";
-        removeBtn.style.border = "none";
-        removeBtn.style.color = "#fff";
-        removeBtn.style.padding = "6px 8px";
-        removeBtn.style.borderRadius = "6px";
-        removeBtn.style.cursor = "pointer";
+        removeBtn.className = "small-btn remove-btn";
         removeBtn.addEventListener("click", () => {
           tr.remove();
           saveTableByType(type);
@@ -363,7 +318,6 @@
         try {
           const data = JSON.parse(raw);
           if (!Array.isArray(data)) return;
-          // Limpa tabela atual
           tbody.innerHTML = "";
           data.forEach(row => addRow(type, row));
         } catch (e) {
@@ -396,7 +350,6 @@
           materialsTableBody.innerHTML = "";
           localStorage.removeItem(LS_MATERIALS);
         }
-        // recalcula valores
         calculateLoss();
       }
 
@@ -405,7 +358,6 @@
         let total = 0;
         let lost = 0;
 
-        // Medicamentos: coluna 1 = quantidade, coluna 2 = validade, coluna 3 = custo
         for (let r = 0; r < medicationsTableBody.rows.length; r++) {
           const cells = medicationsTableBody.rows[r].cells;
           const qty = parseFloat(cells[1].innerText.replace(",",".").trim()) || 0;
@@ -420,7 +372,6 @@
           }
         }
 
-        // Materiais: coluna 1 = quantidade, coluna 3 = custo (index 3)
         for (let r = 0; r < materialsTableBody.rows.length; r++) {
           const cells = materialsTableBody.rows[r].cells;
           const qty = parseFloat(cells[1].innerText.replace(",",".").trim()) || 0;
@@ -434,7 +385,7 @@
         localStorage.setItem(LS_LOST, lost.toFixed(2));
       }
 
-      // Exporta dados como JSON (abre em nova aba)
+      // Exporta dados como JSON
       function exportJSON() {
         saveAllTables();
         const data = {
@@ -457,7 +408,6 @@
 
       // Utilitários
       function parseDateISO(text) {
-        // aceita YYYY-MM-DD ou YYYY/MM/DD
         const t = text.trim();
         if (!t) return null;
         const iso = t.replace(/\//g,"-");
